@@ -1,31 +1,35 @@
-var canvas = document.querySelector('canvas')
-var context = canvas.getContext('2d')
+let canvas = document.querySelector('canvas')
+let context = canvas.getContext('2d')
 
-var size = window.innerWidth
-var dpr = window.devicePixelRatio
+let size = window.innerWidth
+let dpr = window.devicePixelRatio
+
 canvas.width = size * dpr
 canvas.height = size * dpr
 context.scale(dpr, dpr)
-
-context.lineCap = 'square'
 context.lineWidth = 2
 
-function draw(x, y, width, height) {
-    var leftToRight = Math.random() >= 0.5
-    if (leftToRight) {
-        context.moveTo(x, y)
-        context.lineTo(x + width, y + width)
-    } else {
-        context.moveTo(x + width, y)
-        context.lineTo(x, y + height)
+let step = 10
+let lines = []
+
+// Creating lines and points
+for (let i = step; i <= size - step; i += step) {
+    let line = []
+    for (let j = step; j <= size - step; j += step) {
+        let random = Math.random() * 10
+        let point = {x: j, y: i + random}
+        line.push(point)
     }
-    context.stroke()
+    lines.push(line)
 }
 
-var step = 20
+// Draw
+for (let i = 0; i < lines.length; i++) {
+    context.beginPath();
+    context.moveTo(lines[i][0].x, lines[i][0].y)
 
-for (var x = 0; x < size; x += step) {
-    for (var y = 0; y < size; y += step) {
-        draw(x, y, step, step)
+    for (let j = 0; j < lines[i].length; j++) {
+        context.lineTo(lines[i][j].x, lines[i][j].y)
     }
+    context.stroke()
 }
